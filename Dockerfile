@@ -1,5 +1,5 @@
 # Use an official Python runtime as a parent image
-FROM debian:latest
+FROM debian:12-slim
 
 
 WORKDIR /mylunch

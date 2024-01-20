@@ -1,5 +1,5 @@
 wheel
-Werkzeug>=2.2.0
+werkzeug>=2.2.0
 flask-bootstrap
 WTForms-Components
 rocketchat_API
@@ -22,3 +22,5 @@ blinker
 qrcode
 Image
 python-dateutil
+setuptools
+gunicorn

@@ -11,10 +11,9 @@ COPY . /mylunch/
 RUN apt-get update
 
 RUN apt-get install --no-install-recommends -y python3 \
-        sqlite3 jq python3-pip python3-setuptools \
-        python3-wheel gunicorn3
+        sqlite3 jq python3-pip
 
-# RUN pip3 install -U pip
+RUN pip3 install -U pip  --break-system-packages
 RUN pip3 install -r requirements.txt --break-system-packages
 
 RUN apt-get clean

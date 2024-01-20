@@ -1,6 +1,5 @@
 from flask import render_template, redirect, url_for, flash, request, \
     current_app
-from werkzeug.urls import url_parse
 from flask_login import login_user, logout_user, current_user, login_required
 from flask_babel import _
 from app import db
@@ -24,8 +23,6 @@ def login():
             return redirect(url_for('auth.login'))
         login_user(user, remember=form.remember_me.data)
         next_page = request.args.get('next')
-        if not next_page or url_parse(next_page).netloc != '':
-            next_page = url_for('main.index')
         return redirect(next_page)
     return render_template('auth/login.html', title=_('Sign In'), form=form)
 
@@ -61,7 +58,7 @@ def register():
         db.session.commit()
         # loggedin = User.query.filter_by(
         #     username=current_user.username).first()
-        # 
+        #
         # if loggedin.role != "admin":
         #     flash(_('Congratulations, you are now a registered user!'))
         # else:

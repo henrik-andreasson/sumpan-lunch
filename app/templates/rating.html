@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+
+
+{% if allrating %}
+
+    <h1>{{ _('List Ratings') }}</h1>
+
+    <table class="table table-hover">
+      <tr>
+        <td>{{_('Lunch Resturant')}}</td>
+        <td>{{_('User')}}</td>
+        <td>{{_('Rating')}}</td>
+        <td>{{_('Meal')}}</td>
+        <td>{{_('Comment')}}</td>
+      </tr>
+
+    {% for rate in allrating %}
+
+          <tr>
+            <td> <a href="{{ url_for('main.lunchresturant_view',id=rate.resturant.id) }}"> {{rate.resturant.name}}  </a>      </td>
+            <td>  {{rate.user.username}}   </td>
+            <td>  {{rate.rating}}    </td>
+            <td>  {{rate.meal}}    </td>
+            <td>  {{rate.comment}}    </td>
+          </tr>
+      {% endfor %}
+
+      </table>
+{% endif %}
+
+
+{% if rating %}
+
+    <h1>{{ _('View Rating') }}</h1>
+
+    <table class="table">
+      <tr>
+        <td>{{_('Lunch Resturant')}}</td> <td>  <a href="{{ url_for('main.lunchresturant_view',id=rating.resturant.id) }}"> {{rating.resturant.name}} </a> </td>
+      </tr>
+      <tr>
+        <td>{{_('User')}}</td>           <td>  <a href="{{ url_for('main.user', username=rating.user.username) }}"> {{rating.user.username}}   </td>
+      </tr>
+      <tr>
+        <td>{{_('Rating')}}</td>        <td>  {{rating.rating}}    </td>
+      </tr>
+      <tr>
+        <td>{{_('Meal')}}</td>          <td>  {{rating.meal}}    </td>
+      </tr>
+      <tr>
+        <td>{{_('Comment')}}</td>       <td>  {{rating.comment}}    </td>
+      </tr>
+      <tr>
+        <td> {{_('Update')}} </td>       <td> <a href="{{ url_for('main.rating_edit', id=rating.id) }}"> {{_('Rating update')}}  </a>      </td>
+      </tr>
+      <tr>
+        <td> {{_('Delete')}} </td>       <td> <a href="{{ url_for('main.rating_delete', id=rating.id) }}"> {{_('Rating delete')}}  </a>      </td>
+      </tr>
+
+    {% for rate in allrating %}
+
+          <tr>
+            <td> <a href="{{ url_for('main.lunchresturant_view',id=rate.resturant.id) }}">   </a>      </td>
+
+
+
+
+          </tr>
+      {% endfor %}
+
+      </table>
+{% endif %}
+
+    <nav aria-label="...">
+        <ul class="pager">
+            <li class="previous{% if not prev_url %} disabled{% endif %}">
+                <a href="{{ prev_url or '#' }}">
+                    <span aria-hidden="true">&larr;</span> {{ _('Newer ') }}
+                </a>
+            </li>
+            <li class="next{% if not next_url %} disabled{% endif %}">
+                <a href="{{ next_url or '#' }}">
+                    {{ _('Older ') }} <span aria-hidden="true">&rarr;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    {% if form %}
+        <div class="row">
+            <div class="col-md-4">
+                {{ wtf.quick_form(form) }}
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}

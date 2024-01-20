@@ -1,5 +1,5 @@
 wheel
-werkzeug
+Werkzeug>=2.2.0
 flask-bootstrap
 WTForms-Components
 rocketchat_API

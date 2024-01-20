@@ -23,9 +23,7 @@ RUN rm -rf /var/lib/apt/lists/*
 # Make port available to the world outside this container
 EXPOSE 8080
 
-COPY gunicorn-http-start.sh /mylunch/start.sh
 RUN chmod +x /mylunch/start.sh
-
 
 ENV FLASK_APP=mylunch.py
 

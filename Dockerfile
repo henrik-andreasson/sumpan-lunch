@@ -1,17 +1,17 @@
 # Use an official Python runtime as a parent image
-FROM debian:12-slim
+FROM debian:latest
 
 
 WORKDIR /mylunch
 
-# Set the working directory to /app
+# Set the working directory to /mylunch
 COPY . /mylunch/
 
 # Install any needed packages
 RUN apt-get update
 
 RUN apt-get install --no-install-recommends -y python3 \
-        sqlite3 jq python3-pip
+        sqlite3 jq python3-pip gnupg curl
 
 RUN pip3 install -U pip  --break-system-packages
 RUN pip3 install -r requirements.txt --break-system-packages

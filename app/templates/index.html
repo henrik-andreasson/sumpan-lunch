@@ -38,7 +38,9 @@
                 <td>  {{ rest.average_rating }}        </td>
                 <td>
                   <a href="{{ url_for('main.lunchresturant_view', id=rest.id) }}"> {{_('View resurant')}}</a>
-                  <a href="{{ url_for('main.rating_add', restid=rest.id) }}"> {{_('Add Rating')}}</a>
+                  <a href="{{ url_for('main.rating_add', restid=rest.id) }}" class="navbar-brand">
+                    <img src="{{ url_for('static', filename='rate.png') }}" alt="add rating" />
+                  </a>
 
                </td>
 

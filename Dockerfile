@@ -13,7 +13,8 @@ RUN apt-get update
 RUN apt-get install --no-install-recommends -y python3 \
         sqlite3 jq python3-pip gnupg curl
 
-RUN pip3 install -U pip  
+RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+RUN python3 get-pip.py
 RUN pip3 install -r requirements.txt --break-system-packages
 
 RUN apt-get clean

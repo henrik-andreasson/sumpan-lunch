@@ -369,6 +369,7 @@ def lunchresturant_view(id):
     ratings = Rating.query.filter_by(resturant_id=lunchresturant.id).paginate(
             page=page, per_page=current_app.config['POSTS_PER_PAGE'])
 
+    google_maps_api_key=current_app.config['GOOGLE_MAPS_API_KEY']
     next_url = url_for('main.lunchresturant_view', page=ratings.next_num) \
         if ratings.has_next else None
     prev_url = url_for('main.lunchresturant_view', page=ratings.prev_num) \
@@ -376,7 +377,7 @@ def lunchresturant_view(id):
 
     return render_template('lunchresturant.html', title=_('lunchresturant'),
                            lunchresturant=lunchresturant,
-                           ratings=ratings,
+                           ratings=ratings, google_maps_api_key=google_maps_api_key,
                            next_url=next_url,
                            prev_url=prev_url)
 

@@ -467,15 +467,15 @@ def lunchresturant_search():
         lunchresturant = LunchResturant.query.filter(LunchResturant.name.like(searchfor)).paginate(
             page=page, per_page=current_app.config['POSTS_PER_PAGE'])
 
-        next_url = url_for('main.lunchresturant_list', page=lunchresturant.next_num) \
+        next_url = url_for('main.lunchresturant_search', page=lunchresturant.next_num) \
             if lunchresturant.has_next else None
-        prev_url = url_for('main.lunchresturant_list', page=lunchresturant.prev_num) \
+        prev_url = url_for('main.lunchresturant_search', page=lunchresturant.prev_num) \
             if lunchresturant.has_prev else None
 
-  
-    return render_template('lunchresturant.html', title=_('lunchresturant'),
+
+    return render_template('search.html', title=_('lunchresturant'),
                            alllunchresturant=lunchresturant.items, next_url=next_url,
-                           prev_url=prev_url)
+                           prev_url=prev_url,search=search)
 
 
 @bp.route('/lunchresturant/delete/', methods=['GET', 'POST'])

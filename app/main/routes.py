@@ -447,6 +447,36 @@ def lunchresturant_list():
                            alllunchresturant=lunchresturant.items, next_url=next_url,
                            prev_url=prev_url)
 
+@bp.route('/lunchresturant/search/', methods=['POST','GET'])
+@login_required
+def lunchresturant_search():
+
+    page = request.args.get('page', 1, type=int)
+    form = LunchResturantForm()
+    if request.method == 'POST' and form.validate_on_submit():
+        search = form.search.data
+    else:
+        search = request.args.get('search')
+
+    if search is None:
+        print("nodata")
+
+    else:
+        searchfor = f'%{search.lower()}%'
+        print(f'search for {searchfor}')
+        lunchresturant = LunchResturant.query.filter(LunchResturant.name.like(searchfor)).paginate(
+            page=page, per_page=current_app.config['POSTS_PER_PAGE'])
+
+        next_url = url_for('main.lunchresturant_list', page=lunchresturant.next_num) \
+            if lunchresturant.has_next else None
+        prev_url = url_for('main.lunchresturant_list', page=lunchresturant.prev_num) \
+            if lunchresturant.has_prev else None
+
+  
+    return render_template('lunchresturant.html', title=_('lunchresturant'),
+                           alllunchresturant=lunchresturant.items, next_url=next_url,
+                           prev_url=prev_url)
+
 
 @bp.route('/lunchresturant/delete/', methods=['GET', 'POST'])
 @login_required

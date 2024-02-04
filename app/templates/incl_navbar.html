@@ -1,0 +1,71 @@
+<!-- Fixed navbar -->
+{% if current_user.theme == 'light' %}
+<nav class="navbar navbar-expand-md navbar-light fixed-top shadow-sm" style="background-color: #7e4fe3;">
+{% else %}
+<nav class="navbar navbar-expand-md navbar-light fixed-top shadow-sm" style="background-color: #2e2f69;">
+{% endif %}
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="{{url_for('main.index')}}">{% if title %}{{ title }} - {% else %}{{ _('Welcome to Sumpan lunch') }}{% endif %}</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        {% if current_user.is_authenticated %}
+
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav ms-auto mb-2 mb-md-0">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  {{ _('Lunch Resturants') }}
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="{{ url_for('main.lunchresturant_list') }}">{{ _('List Lunch Resturants') }}</a></li>
+                  <li><a class="dropdown-item" href="{{ url_for('main.lunchresturant_add') }}">{{ _('Add LunchResturant') }}</a></li>
+                </ul>
+              </li>
+
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  {{ _('Users') }}
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li><a class="dropdown-item" href="{{ url_for('main.user_list') }}">{{ 'List' }}</a></li>
+                  <li><a class="dropdown-item" href="{{ url_for('auth.register') }}">{{ 'Add' }}</a></li>
+                  <li><a class="dropdown-item" href="{{ url_for('auth.user_set_password') }}">{{ 'Set Password' }}</a></li>
+                  <li><a class="dropdown-item" href="{{ url_for('auth.user_update') }}">{{ 'Update' }}</a></li>
+                </ul>
+              </li>
+
+
+              <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      {{ _('Ratings') }}
+                  </a>
+                      <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="{{ url_for('main.rating_list') }}">{{ _('List Ratings') }}</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('main.rating_add') }}">{{ _('Add Rating') }}</a></li>
+                      </ul>
+                </li>
+
+
+               {% endif %}
+               {% if current_user.is_anonymous %}
+                 <li class="nav-item">
+                     <a class="nav-link href="{{url_for('auth.login')}}">{{ _('Login') }}</a>
+                 </li>
+               {% else %}
+                 <li class="nav-item dropdown">
+                   <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                       {{ _('User settings') }}
+                   </a>
+                   <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                     <li><a class="dropdown-item" href="{{ url_for('main.user', username=current_user.username) }}">{{ 'Profile' }}</a></li>
+                     <li><a class="dropdown-item" href="{{ url_for('auth.change_password') }}">{{ 'Change password' }}</a></li>
+                     <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">{{ 'Logout' }}</a></li>
+                   </ul>
+                 </li>
+               {% endif %}
+
+            </ul>
+        </div>
+    </div>
+</nav>

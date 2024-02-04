@@ -1,6 +1,13 @@
 {% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
 
-{% block app_content %}
+{% block metatags %}
+<title>{{_('Sumpan Lunch')}}</title>
+<meta name="description" content="Teamplan">
+{% endblock %}
+
+
+{% block contents %}
     <table class="table table-hover">
         <tr>
             <td width="256px"><img alt="user avatar" src="{{ user.avatar(256) }}"></td>

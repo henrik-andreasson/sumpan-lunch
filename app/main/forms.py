@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField, SelectField, \
-    SelectMultipleField, BooleanField
+    SelectMultipleField, BooleanField, RadioField
 from wtforms.fields import DateTimeField
 from wtforms.validators import ValidationError, DataRequired, Length
 from flask_babel import _, lazy_gettext as _l
@@ -28,9 +28,9 @@ class EditProfileForm(FlaskForm):
 
 class LunchResturantForm(FlaskForm):
 
-    name      = StringField(_l('Name'), validators=[DataRequired()], default="Lunch in Sumpan")
+    name      = StringField(_l('Name'), validators=[DataRequired()])
     about = StringField(_l('About'))
-    location  = StringField(_l('Location (used to find resturant via maps search)'))
+    location  = StringField(_l('Location (used to find resturant via maps search)'), default="Sundbyberg Sweden")
 
     submit = SubmitField(_l('Submit'))
     cancel = SubmitField(_l('Cancel'))
@@ -38,14 +38,14 @@ class LunchResturantForm(FlaskForm):
 
 
 class RatingForm(FlaskForm):
- 
+
     lunchresturant = SelectField(_l('Lunch Resturant'), validators=[DataRequired()])
-    rating = SelectField(_l('Rating'),
-                             choices=[(1, _l('Very Bad')),
-                                      (2, _l('Bad')),
-                                      (3, _l('OK')),
+    rating = RadioField(_l('Rating'),
+                             choices=[(5, _l('Very Good')),
                                       (4, _l('Good')),
-                                      (5, _l('Very Good'))],
+                                      (3, _l('OK')),
+                                      (2, _l('Bad')),
+                                      (1, _l('Very Bad'))],
                              default=3, coerce=int)
     meal = StringField(_l('Meal'))
     comment = StringField(_l('comment'))

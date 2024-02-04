@@ -14,6 +14,7 @@ from dateutil import relativedelta
 from rocketchat_API.rocketchat import RocketChat
 import calendar
 from sqlalchemy import desc, asc
+import os
 
 
 @bp.before_app_request
@@ -22,16 +23,38 @@ def before_request():
         current_user.last_seen = datetime.utcnow()
         db.session.commit()
     g.locale = str(get_locale())
+    g.user = current_user
 
 
 @bp.route('/', methods=['GET', 'POST'])
 @bp.route('/index', methods=['GET', 'POST'])
 @login_required
 def index():
+    sort_order  = request.args.get('so', 'desc')
+    sort_column = request.args.get('sc', 'name')
+    print(f"sort_order: {sort_order} sort_column: {sort_column}")
 
     page = request.args.get('page', 1, type=int)
-
-    alllunchresturant = LunchResturant.query.order_by(LunchResturant.average_rating).paginate(
+    alllunchresturant = None
+    if sort_order == "desc" and sort_column == "name":
+        print("desc & name")
+        alllunchresturant = LunchResturant.query.order_by(LunchResturant.name.desc()).paginate(
+            page=page, per_page=current_app.config['POSTS_PER_PAGE'])
+    elif sort_order == "asc" and sort_column == "name":
+        print("asc & name")
+        alllunchresturant = LunchResturant.query.order_by(LunchResturant.name.asc()).paginate(
+            page=page, per_page=current_app.config['POSTS_PER_PAGE'])
+    elif sort_order == "desc" and sort_column == "rating":
+        print("desc & rating")
+        alllunchresturant = LunchResturant.query.order_by(LunchResturant.average_rating.desc()).paginate(
+            page=page, per_page=current_app.config['POSTS_PER_PAGE'])
+    elif sort_order == "asc" and sort_column == "rating":
+        print("asc & rating")
+        alllunchresturant = LunchResturant.query.order_by(LunchResturant.average_rating.asc()).paginate(
+            page=page, per_page=current_app.config['POSTS_PER_PAGE'])
+    else:
+        print("default rating desc")
+        alllunchresturant = LunchResturant.query.order_by(LunchResturant.average_rating.desc()).paginate(
             page=page, per_page=current_app.config['POSTS_PER_PAGE'])
 
     next_url = url_for('main.lunchresturant_list', page=alllunchresturant.next_num) \
@@ -42,7 +65,7 @@ def index():
 
     return render_template('lunchresturant.html', title=_('lunchresturant'),
                            alllunchresturant=alllunchresturant.items, next_url=next_url,
-                           prev_url=prev_url)
+                           prev_url=prev_url, so=sort_order, sc=sort_column)
 
 
 @bp.route('/user/<username>')
@@ -220,10 +243,32 @@ def rating_edit():
 @login_required
 def rating_list():
 
+    sort_order  = request.args.get('so', 'desc')
+    sort_column = request.args.get('sc', 'name')
+    print(f"sort_order: {sort_order} sort_column: {sort_column}")
+
     page = request.args.get('page', 1, type=int)
 
-    rating = Rating.query.order_by(Rating.rating).paginate(
+    if sort_order == "desc" and sort_column == "rating":
+        rating = Rating.query.order_by(Rating.rating.desc()).paginate(
             page=page, per_page=current_app.config['POSTS_PER_PAGE'])
+
+    elif sort_order == "asc" and sort_column == "rating":
+        rating = Rating.query.order_by(Rating.rating.asc()).paginate(
+            page=page, per_page=current_app.config['POSTS_PER_PAGE'])
+
+    elif sort_order == "desc" and sort_column == "resturant":
+        rating = db.session.query(Rating).join(LunchResturant).filter(Rating.resturant_id == LunchResturant.id).order_by(LunchResturant.name.desc()).paginate(page=page, per_page=current_app.config['POSTS_PER_PAGE'])
+
+    elif sort_order == "asc" and sort_column == "resturant":
+        rating = db.session.query(Rating).join(LunchResturant).filter(Rating.resturant_id == LunchResturant.id).order_by(LunchResturant.name.asc()).paginate(page=page, per_page=current_app.config['POSTS_PER_PAGE'])
+
+    elif sort_order == "desc" and sort_column == "user":
+        rating = db.session.query(Rating).join(User).filter(Rating.user_id == User.id).order_by(User.username.desc()).paginate(page=page, per_page=current_app.config['POSTS_PER_PAGE'])
+
+    else:
+        rating = db.session.query(Rating).join(User).filter(Rating.user_id == User.id).order_by(User.username.asc()).paginate(page=page, per_page=current_app.config['POSTS_PER_PAGE'])
+
 
     next_url = url_for('main.rating_list', page=rating.next_num) \
         if rating.has_next else None
@@ -232,7 +277,8 @@ def rating_list():
 
     return render_template('rating.html', title=_('Rating'),
                            allrating=rating.items, next_url=next_url,
-                           prev_url=prev_url)
+                           prev_url=prev_url, so=sort_order,
+                           sc=sort_column)
 
 
 @bp.route('/rating/<id>', methods=['GET', 'POST'])
@@ -278,7 +324,7 @@ def rating_delete():
     lunchresturant.update_average_rating()
     db.session.commit()
     return redirect(url_for('main.index'))
- 
+
 
 @bp.route('/lunchresturant/add', methods=['GET', 'POST'])
 @login_required

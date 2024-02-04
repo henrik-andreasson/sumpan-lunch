@@ -1,19 +1,22 @@
 {% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
 
-{% block app_content %}
+{% block metatags %}
+<title>{{_('Sumpan Lunch')}}</title>
+<meta name="description" content="Teamplan">
+{% endblock %}
+
+
+{% block contents %}
   {% if users %}
   <nav aria-label="...">
-      <ul class="pager">
-          <li class="previous{% if not prev_url %} disabled{% endif %}">
-              <a href="{{ prev_url or '#' }}">
-                  <span aria-hidden="true">&larr;</span> {{ _('Prevoius') }}
-              </a>
-          </li>
-          <li class="next{% if not next_url %} disabled{% endif %}">
-              <a href="{{ next_url or '#' }}">
-                  {{ _('Next') }} <span aria-hidden="true">&rarr;</span>
-              </a>
-          </li>
+      <ul class="pagination justify-content-center">
+        <li class="page-item{% if not prev_url %} disabled{% endif %}">
+          <a class="page-link" href="{{ prev_url or '#' }}" tabindex="-1">Previous</a>
+        </li>
+        <li class="page-item{% if not next_url %} disabled{% endif %}">
+          <a class="page-link" href="{{ next_url or '#' }}">Next</a>
+        </li>
       </ul>
   </nav>
   {% endif %}
@@ -55,17 +58,13 @@
 
     {% if users %}
     <nav aria-label="...">
-        <ul class="pager">
-            <li class="previous{% if not prev_url %} disabled{% endif %}">
-                <a href="{{ prev_url or '#' }}">
-                    <span aria-hidden="true">&larr;</span> {{ _('Prevoius') }}
-                </a>
-            </li>
-            <li class="next{% if not next_url %} disabled{% endif %}">
-                <a href="{{ next_url or '#' }}">
-                    {{ _('Next') }} <span aria-hidden="true">&rarr;</span>
-                </a>
-            </li>
+        <ul class="pagination justify-content-center">
+          <li class="page-item{% if not prev_url %} disabled{% endif %}">
+            <a class="page-link" href="{{ prev_url or '#' }}" tabindex="-1">Previous</a>
+          </li>
+          <li class="page-item{% if not next_url %} disabled{% endif %}">
+            <a class="page-link" href="{{ next_url or '#' }}">Next</a>
+          </li>
         </ul>
     </nav>
     {% endif %}

@@ -1,6 +1,6 @@
 from app import db
 from app.errors import bp
-from flask import render_template, request
+from flask import render_template, request, g
 from app.api.errors import error_response as api_error_response
 
 

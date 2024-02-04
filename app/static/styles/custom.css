@@ -2,4 +2,4 @@ div.required label:after {
     content: " *";
     color: red;
 }
-body { background: #b9b6de !important;}
+body { background: #8c68cd; !important;}

@@ -2,8 +2,8 @@
 {% import 'bootstrap/wtf.html' as wtf %}
 
 {% block metatags %}
-<title>{{_('Sumpan Lunch')}}</title>
-<meta name="description" content="Teamplan">
+<title>{% if title %}{{ title }} - {% else %}{{ _('Welcome to mylunch') }}{% endif %}</title>
+<meta name="description" content="{% if title %}{{ title }} - {% else %}{{ _('Welcome to mylunch') }}{% endif %}">
 {% endblock %}
 
 
@@ -15,62 +15,81 @@
   {% set so %}desc{% endset %}
 {% endif %}
 
-    <h1>{{ _('Hi, %(username)s!', username=current_user.username) }}</h1>
-    <nav aria-label="...">
-        <ul class="pagination justify-content-center">
-          <li class="page-item{% if not prev_url %} disabled{% endif %}">
-            <a class="page-link" href="#" tabindex="-1">Previous</a>
-          </li>
-          <li class="page-item{% if not next_url %} disabled{% endif %}">
-            <a class="page-link" href="#">Next</a>
-          </li>
-        </ul>
-    </nav>
 
-    {% if lunchresturants %}
+  <div class="container">
+    <div class="row">
+        <div class="col-sm-6">
 
-        <h1>{{ _('List Lunch Resturants') }}</h1>
+  {% if top_rest %}
+      <div class="list-group">
+        <a class="list-group-item" href="{{ url_for('main.lunchresturant_add') }}">
+          <h4 class="list-group-item-heading">{{_('Top Resturants')}}</h4>
+        </a>
+        {% for r in top_rest %}
+          <a href="{{ url_for('main.lunchresturant_view', id=r.id) }}" class="list-group-item">
+            {{r.name}} ({{ r.average_rating }})
+          </a>
+        {% endfor %}
+      </div>
+  {% endif %}
 
-        <table class="table table-hover">
-          <tr>
-            <td><A HREF="{{url_for('main.index', so=order)}}">   {{ _('Name') }}   </a></td>
-            <td><A HREF="{{url_for('main.index', so=order)}}">   {{ _('Rating') }}   </a></td>
-            <td>{{_('About')}}</td>
-          </tr>
+    </div>
+    <div class="col-sm-6">
 
-        {% for rest in lunchresturants %}
+      {% if low_rest %}
+          <div class="list-group">
+            <a class="list-group-item" href="{{ url_for('main.lunchresturant_add') }}">
+              <h4 class="list-group-item-heading">{{_('Low/Unrated Resturants')}}</h4>
+            </a>
+            {% for r in low_rest %}
+              <a href="{{ url_for('main.lunchresturant_view', id=r.id) }}" class="list-group-item">
+                {{r.name}} ({{ r.average_rating }})
+              </a>
+            {% endfor %}
+          </div>
+      {% endif %}
 
-              <tr>
-                <td>  {{rest.name}}        </td>
-                <td>  {{ rest.average_rating }}        </td>
-                <td>
-                  <a href="{{ url_for('main.lunchresturant_view', id=rest.id) }}"> {{_('View resurant')}}</a>
-                  <a href="{{ url_for('main.rating_add', restid=rest.id) }}" class="navbar-brand">
-                    <img src="{{ url_for('static', filename='rate.png') }}" alt="add rating" />
-                  </a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-6">
 
-               </td>
-
-              </tr>
-          {% endfor %}
-
-          </table>
+    {% if top_rate %}
+      <div class="list-group">
+      <a class="list-group-item" href="{{ url_for('main.rating_add') }}">
+        <h4 class="list-group-item-heading">{{_('Top Ratings')}}</h4>
+      </a>
+      {% for a in top_rate %}
+        <a href="{{ url_for('main.rating_view', id=a.id) }}" class="list-group-item">
+          {{a.resturant.name}} ({{ a.rating }}) by {{a.user.username}}
+        </a>
+      {% endfor %}
+    </div>
     {% endif %}
 
-    <nav aria-label="...">
-        <ul class="pagination justify-content-center">
-          <li class="page-item{% if not prev_url %} disabled{% endif %}">
-            <a class="page-link" href="#" tabindex="-1">Previous</a>
-          </li>
-          <li class="page-item{% if not next_url %} disabled{% endif %}">
-            <a class="page-link" href="#">Next</a>
-          </li>
-        </ul>
-    </nav>
-    <hr>
-    {% if form %}
-    {{ wtf.quick_form(form) }}
-    <br>
-    {% endif %}
+  </div>
+  <div class="col-sm-6">
+
+  {% if low_rate %}
+    <div class="list-group">
+    <a class="list-group-item" href="{{ url_for('main.rating_add') }}">
+      <h4 class="list-group-item-heading">{{_('Low Ratings')}}</h4>
+    </a>
+    {% for a in low_rate %}
+      <a href="{{ url_for('main.rating_view', id=a.id) }}" class="list-group-item">
+        {{a.resturant.name}} ({{ a.rating }}) by {{a.user.username}}
+      </a>
+    {% endfor %}
+    </div>
+  {% endif %}
+
+  </div>
+
+  </div>
+</div>
+</div>
+
+
+
 
 {% endblock %}

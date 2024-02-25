@@ -30,43 +30,19 @@ def before_request():
 @bp.route('/index', methods=['GET', 'POST'])
 @login_required
 def index():
-    sort_order  = request.args.get('so', 'desc')
-    sort_column = request.args.get('sc', 'name')
-    print(f"sort_order: {sort_order} sort_column: {sort_column}")
 
-    page = request.args.get('page', 1, type=int)
-    alllunchresturant = None
-    if sort_order == "desc" and sort_column == "name":
-        print("desc & name")
-        alllunchresturant = LunchResturant.query.order_by(LunchResturant.name.desc()).paginate(
-            page=page, per_page=current_app.config['POSTS_PER_PAGE'])
-    elif sort_order == "asc" and sort_column == "name":
-        print("asc & name")
-        alllunchresturant = LunchResturant.query.order_by(LunchResturant.name.asc()).paginate(
-            page=page, per_page=current_app.config['POSTS_PER_PAGE'])
-    elif sort_order == "desc" and sort_column == "rating":
-        print("desc & rating")
-        alllunchresturant = LunchResturant.query.order_by(LunchResturant.average_rating.desc()).paginate(
-            page=page, per_page=current_app.config['POSTS_PER_PAGE'])
-    elif sort_order == "asc" and sort_column == "rating":
-        print("asc & rating")
-        alllunchresturant = LunchResturant.query.order_by(LunchResturant.average_rating.asc()).paginate(
-            page=page, per_page=current_app.config['POSTS_PER_PAGE'])
-    else:
-        print("default rating desc")
-        alllunchresturant = LunchResturant.query.order_by(LunchResturant.average_rating.desc()).paginate(
-            page=page, per_page=current_app.config['POSTS_PER_PAGE'])
-
-    next_url = url_for('main.lunchresturant_list', page=alllunchresturant.next_num) \
-        if alllunchresturant.has_next else None
-    prev_url = url_for('main.lunchresturant_list', page=alllunchresturant.prev_num) \
-        if alllunchresturant.has_prev else None
-
-
-    return render_template('lunchresturant.html', title=_('lunchresturant'),
-                           alllunchresturant=alllunchresturant.items, next_url=next_url,
-                           prev_url=prev_url, so=sort_order, sc=sort_column)
-
+    top_rest = LunchResturant.query.order_by(LunchResturant.average_rating.desc()).limit(10)
+    low_rest = LunchResturant.query.order_by(LunchResturant.average_rating.asc()).limit(10)
+    top_rate = Rating.query.order_by(Rating.rating.desc()).limit(10)
+    low_rate = Rating.query.order_by(Rating.rating.asc()).limit(10)
+    print("hej")
+    return render_template('index.html', title=_('lunchresturant'),
+                           top_rest=top_rest,
+                           low_rest=low_rest,
+                           top_rate=top_rate,
+                           low_rate=low_rate
+                           )
+ 
 
 @bp.route('/user/<username>')
 @login_required
@@ -432,20 +408,42 @@ def lunchresturant_view(id):
 @bp.route('/lunchresturant/list/', methods=['GET', 'POST'])
 @login_required
 def lunchresturant_list():
+    sort_order  = request.args.get('so', 'desc')
+    sort_column = request.args.get('sc', 'name')
+    print(f"sort_order: {sort_order} sort_column: {sort_column}")
 
     page = request.args.get('page', 1, type=int)
-
-    lunchresturant = LunchResturant.query.order_by(LunchResturant.name).paginate(
+    alllunchresturant = None
+    if sort_order == "desc" and sort_column == "name":
+        print("desc & name")
+        alllunchresturant = LunchResturant.query.order_by(LunchResturant.name.desc()).paginate(
+            page=page, per_page=current_app.config['POSTS_PER_PAGE'])
+    elif sort_order == "asc" and sort_column == "name":
+        print("asc & name")
+        alllunchresturant = LunchResturant.query.order_by(LunchResturant.name.asc()).paginate(
+            page=page, per_page=current_app.config['POSTS_PER_PAGE'])
+    elif sort_order == "desc" and sort_column == "rating":
+        print("desc & rating")
+        alllunchresturant = LunchResturant.query.order_by(LunchResturant.average_rating.desc()).paginate(
+            page=page, per_page=current_app.config['POSTS_PER_PAGE'])
+    elif sort_order == "asc" and sort_column == "rating":
+        print("asc & rating")
+        alllunchresturant = LunchResturant.query.order_by(LunchResturant.average_rating.asc()).paginate(
+            page=page, per_page=current_app.config['POSTS_PER_PAGE'])
+    else:
+        print("default rating desc")
+        alllunchresturant = LunchResturant.query.order_by(LunchResturant.average_rating.desc()).paginate(
             page=page, per_page=current_app.config['POSTS_PER_PAGE'])
 
-    next_url = url_for('main.lunchresturant_list', page=lunchresturant.next_num) \
-        if lunchresturant.has_next else None
-    prev_url = url_for('main.lunchresturant_list', page=lunchresturant.prev_num) \
-        if lunchresturant.has_prev else None
+    next_url = url_for('main.lunchresturant_list', page=alllunchresturant.next_num) \
+        if alllunchresturant.has_next else None
+    prev_url = url_for('main.lunchresturant_list', page=alllunchresturant.prev_num) \
+        if alllunchresturant.has_prev else None
 
-    return render_template('lunchresturant.html', title=_('lunchresturant'),
-                           alllunchresturant=lunchresturant.items, next_url=next_url,
-                           prev_url=prev_url)
+
+    return render_template('index.html', title=_('lunchresturant'),
+                           alllunchresturant=alllunchresturant.items, next_url=next_url,
+                           prev_url=prev_url, so=sort_order, sc=sort_column)
 
 @bp.route('/lunchresturant/search/', methods=['POST','GET'])
 @login_required
